@@ -1,0 +1,9 @@
+{
+	"type": "mp",
+	"typescript": false,
+	"base": "./",
+	"outDir": "./",
+	"miniAppId": "5000020423655",
+	"token": "6db990ef268e3a3080ee32d31c7a",
+	"version": "0.0.6"
+}
