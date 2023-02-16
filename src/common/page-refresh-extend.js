@@ -6,8 +6,7 @@ const mixin = {
       ///默认参数
       pageList: [],
       params: {
-        page_number: 1,
-        page_size: 20
+        
       },
       nomore: false,
       loadmore: false,
@@ -17,19 +16,54 @@ const mixin = {
     }
   },
   onLoad(args) {
-    console.log("refresh-onLoad");
-    this.setData({
-      params: {
-        page_number: 1,
-        page_size: this._defaultPageSize()
-      }
-    })
+  
+    if (!!this._openPaging()) {
+      ///只有开启分页功能才设置分页参数
+      this.setData({
+        ['params.page_number']: 1,
+        ['params.page_size']: this._defaultPageSize(),
+      })
+    }
+   
 
   },
   onPullDownRefresh() {
+     ///如果有onPullDownRefreshHandle这个方法就调用没有就调用onMyLoad
+     if (!!this.onPullDownRefreshHandle) {
+      this.onPullDownRefreshHandle.call(this)
+    } else {
+      if (!!this.onTLoad) this.onTLoad.call(this, this._options)
+    }
+
+    this.setData({
+      refreshing: true
+    })
+
+    setTimeout(() => {
+      uni.stopPullDownRefresh();
+      this.setData({
+        refreshing: false
+      })
+    }, 1500)
 
   },
+  onReachBottom() {
+    console.log("onReachBottom");
+
+    if (this._noenabledloadmore || this.refreshflag || this.nomore) return
+
+    this.setData({
+      refreshflag: true,
+      loadmore: true,
+    })
+
+    pageNet.call(this)
+  },
   methods: {
+    ///是否开启分页
+    _openPaging() {
+      return this.getPageNet != undefined
+    },
     ///默认的分页size
     _defaultPageSize() {
       return 20
@@ -40,9 +74,8 @@ const mixin = {
 
 Vue.mixin(mixin)
 
-let pageNet = function (config) {
-
-  var obj = config.getPageNet && config.getPageNet.call(this, this.params);
+let pageNet = function () {
+  var obj = this.getPageNet && this.getPageNet.call(this, this.params);
   if (!obj) {
     ///不需要加载更多分页数据
     this._noenabledloadmore = true;
@@ -53,20 +86,23 @@ let pageNet = function (config) {
   ///调用分页数据
   this._noenabledloadmore = false;
   obj.then(data => {
+   
     let changeData = {};
     let datas = this.params.page_number == 1 ? [] : this.pageList;
     let len = datas.length + data.rows.length;
-
     if (data.rows.length) {
-      if (datas.length == 0) {
-        datas.push(...rows)
-        changeData['pageList'] = datas;
-      } else {
-        let i = datas.length;
-        data.rows.forEach(item => {
-          changeData[`pageList[${i++}]`] = item;
-        })
-      }
+      // if (datas.length == 0) {
+      //   datas.push(...data.rows)
+      //   changeData['pageList'] = datas;
+      // } else {
+      //   let i = datas.length;
+      //   data.rows.forEach(item => {
+      //     changeData[`pageList[${i++}]`] = item;
+      //   })
+      // }
+
+      datas.push(...data.rows)
+      changeData['pageList'] = datas;
     }
 
     changeData['refreshflag'] = false;
@@ -82,6 +118,7 @@ let pageNet = function (config) {
     changeData['params.page_number'] = this.params.page_number + 1
 
     this.setData(changeData);
+   
   }).catch(err => {
     console.log(err);
     this.setData({
@@ -100,8 +137,19 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
     if (!!toVal.onTLoad && !!fromVal.onTLoad) {
       const orginonTLoad = fromVal.onTLoad;
       fromVal.onTLoad = function (options) {
+
+        let changeVal = {nomore: false};
+        
+        if (!!this._openPaging()) {
+          changeVal['params.page_number'] = 1;
+        }
+
+        this.setData(changeVal)
+       
+
         orginonTLoad.call(this, options)
 
+        pageNet.call(this)
       }
     }
   }

@@ -30,7 +30,9 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
     if (!!toVal.onTLoad && !!fromVal.onTLoad) {
       const orginonTLoad = fromVal.onTLoad;
       fromVal.onTLoad = function (options) {
+        ///调用最基础的onTLoad
         toVal.onTLoad(options);
+        ///调用子的onTLoad
         orginonTLoad.call(this, options)
       }
     }
@@ -42,7 +44,6 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
 }
 
 require('./page-refresh-extend.js');
-require('./page-playaudio-extend.js');
 
 /*
 保证最后顺序在onload调用onTLoad
