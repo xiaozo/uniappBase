@@ -1,5 +1,13 @@
 <template>
   <view class="container">
+    <uni-nav-bar
+     :fixed="true"
+      dark
+      shadow
+      background-color="#007AFF"
+      status-bar
+      title="自定义导航栏"
+    />
     <!-- <postBox></postBox> -->
     <view class="tip">
       {{ tip }}
@@ -15,8 +23,10 @@
     <button @click="zb">坐标</button>
     <button @click="qq">请求</button>
     <button @click="calendar">日历</button>
+    <view v-for="(item, index) in pageList" :key="index">
+      {{ item.book_name }}
+    </view>
   </view>
-  
 </template>
 
 <script>
@@ -43,12 +53,26 @@ export default {
       tip: "",
     };
   },
-  onPullDownRefresh() {
-        console.log("Refresh22222");
-	},
+  onPullDownRefresh() {},
   methods: {
+    getPageNet(params) {
+      params.book_type = 2;
+      return postRequest({
+        path: "bookWxapp/getBookList",
+        data: params,
+      }).then((res) => {
+        return new Promise((resolve, reject) => {
+          if (!res.errorCode) {
+            let { data } = res;
+            resolve(data);
+          }
+        });
+      });
+    },
+
     onTLoad() {
-     console.log(this._options);
+      console.log("index-onTLoad");
+      console.log(this.params);
     },
     calendar() {
       uni.navigateTo({
@@ -116,7 +140,7 @@ export default {
 
 <style>
 .container {
-  padding: 20rpx;
+  /* padding: 20rpx; */
   font-size: 14rpx;
   line-height: 24rpx;
 }
