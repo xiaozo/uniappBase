@@ -43,7 +43,7 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
 
 }
 
-require('./page-refresh-extend.js');
+// require('./page-refresh-extend.js');
 
 /*
 保证最后顺序在onload调用onTLoad
