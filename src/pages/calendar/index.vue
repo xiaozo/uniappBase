@@ -113,20 +113,6 @@ export default {
       
     onTLoad() {
     
-        let params = {
-        book_type:2
-      };
-      params.page_size = 1
-      params.page_number = 10
-
-      this.$postRequest({
-        path: "bookWxapp/getBookList",
-        data: params,
-      })
-        .then((res) => {
-          console.log(res);
-        
-        })
     },
     swiperChange(e) {
       console.log(e);

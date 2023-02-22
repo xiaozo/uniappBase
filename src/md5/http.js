@@ -89,25 +89,7 @@ function transformResponse(response, resolve, reject, requestConfig) {
     // 数组第一项为错误信息 即为 fail 回调
     // 第二项为返回数据
     var [err, res] = response;
-    if (!!err) {
-        reject(err);
-
-        ///如果noTip有值则不弹出错误提示
-        if (!requestConfig.noTip) {
-            uni.showToast({
-                title: err,
-                icon: "error",
-            });
-        }
-        let noHandleView = requestConfig.noHandleView
-        if (!noHandleView) {
-            ///处理界面
-            uni.$emit('net-error', {
-                page: this,
-                err
-            })
-        }
-    } else {
+    if (!!res) {
         const { data, message, error_code, errorCode } = res.data;
 
         if (error_code == 0) {
@@ -115,13 +97,9 @@ function transformResponse(response, resolve, reject, requestConfig) {
             resolve(data);
         } else {
 
-            reject({
-                errorCode: error_code || errorCode,
-                message
-            });
-
-             ///如果noTip有值则不弹出错误提示
+            ///如果noTip有值则不弹出错误提示
             if (!requestConfig.noTip) {
+
                 uni.showToast({
                     title: message,
                     icon: "error",
@@ -137,9 +115,35 @@ function transformResponse(response, resolve, reject, requestConfig) {
                 })
 
             }
+
+            if (reject) reject({
+                errorCode: error_code || errorCode,
+                message
+            });
+
         }
 
+    } else {
+          ///如果noTip有值则不弹出错误提示
+          if (!requestConfig.noTip) {
+            uni.showToast({
+                title: err,
+                icon: "error",
+            });
+        }
+        let noHandleView = requestConfig.noHandleView
+        if (!noHandleView) {
+            ///处理界面
+            uni.$emit('net-error', {
+                page: this,
+                err
+            })
+        }
+
+        if (reject) reject(err);
+
     }
+
 }
 /**
  * 请求数据处理

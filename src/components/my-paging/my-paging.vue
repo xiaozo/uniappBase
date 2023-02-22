@@ -20,6 +20,7 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
     :virtualScrollFps="virtualScrollFps"
     :loading-more-enabled="loadingMoreEnabled"
     :hide-empty-view="!ShowEmptyView"
+    :auto-show-system-loading="true"
   >
     <!-- 这里插入一个view到z-paging中，并且这个view会被z-paging标记为top固定在顶部 -->
 
@@ -145,6 +146,9 @@ export default {
     loadDataSuccess(newVal) {
       this.LoadDataSuccess = newVal;
     },
+    LoadDataSuccess(newVal) {
+      console.log(newVal);
+    }
   },
   methods: {
     ///展示空视图
@@ -188,7 +192,7 @@ export default {
 			}
 			*/
 
-    ///不合并里面的方法 项目里的自定义
+    ///不合并组件里面的方法 项目里的自定义
     nomerge() {},
   },
 };

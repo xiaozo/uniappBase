@@ -15,7 +15,7 @@ const mixin = {
                     setTimeout(() => {
                         // this.$refs.paging.endRefresh();
                         this.$refs.paging.endRefresh();
-                      }, 1000);
+                      }, 800);
                 }
             }
         },
