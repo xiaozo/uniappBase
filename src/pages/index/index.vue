@@ -58,6 +58,7 @@ function t(target) {
 }
 
 import mixin from '@/common/page-extend.js'
+
 export default {
   mixins:[mixin],
   components: {},
