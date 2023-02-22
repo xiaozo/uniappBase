@@ -1,90 +1,95 @@
 <template>
-<view class="content">
-  <my-paging  ref="paging" @query="queryList">
-  <view class="calendar">
-    <!-- 日历头部 -->
-    <view class="calendar-week">
-      <view class="view">一</view>
-      <view class="view">二</view>
-      <view class="view">三</view>
-      <view class="view">四</view>
-      <view class="view">五</view>
-      <view class="view">六</view>
-      <view class="view">日</view>
-    </view>
-    <!-- 日历主体 -->
-    <swiper
-      @change="swiperChange"
-      class="swiper"
-      :style="{ height: swiperHeight }"
-      :circular="true"
-      :current="swiperCurrent"
-      :duration="swiperDuration"
-    >
-      <swiper-item
-        v-for="(listItem, listIndex) in [dateList0, dateList1, dateList2]"
-        :key="listIndex"
-      >
-        <view class="calendar-main" :style="{ height: swiperHeight }">
-          <view
-            v-for="(item,index) in listItem"
-            :key="index"
-            class="day"
-            :class="
-              item.year === nowDay.year &&
-              item.month === nowDay.month &&
-              item.day === nowDay.day &&
-              (item.day !== selectDay.day || oldCurrent !== listIndex)
-                ? 'opactiy'
-                : ''
-            "
-          >
-            <view
-              class="bg"
-              :class="[
-                item.year === nowDay.year &&
-                item.month === nowDay.month &&
-                item.day === nowDay.day
-                  ? 'now'
-                  : '',
-                item.year === selectDay.year && item.month === selectDay.month
-                  ? item.day === selectDay.day && oldCurrent === listIndex
-                    ? 'select'
-                    : ''
-                  : 'other-month',
-              ]"
-              :day="item.day" :year="item.year" :month="item.month"
-              @tap.native.stop="selectChange(item.year,item.month,item.day)"
-            >
-              {{
-                item.year === nowDay.year &&
-                item.month === nowDay.month &&
-                item.day === nowDay.day
-                  ? "今"
-                  : item.day
-              }}</view
-            >
-          </view>
+  <view class="content">
+    <my-paging ref="paging" @query="queryList">
+      <view class="calendar">
+        <!-- 日历头部 -->
+        <view class="calendar-week">
+          <view class="view">一</view>
+          <view class="view">二</view>
+          <view class="view">三</view>
+          <view class="view">四</view>
+          <view class="view">五</view>
+          <view class="view">六</view>
+          <view class="view">日</view>
         </view>
-      </swiper-item>
-    </swiper>
-    <view
-      v-if="showShrink"
-      @tap.native.stop="openChange"
-      class="flex list-open"
-    >
-      <view class="icon" :class="open ? 'fold' : 'unfold'"> </view>
-    </view>
+        <!-- 日历主体 -->
+        <swiper
+          @change="swiperChange"
+          class="swiper"
+          :style="{ height: swiperHeight }"
+          :circular="true"
+          :current="swiperCurrent"
+          :duration="swiperDuration"
+        >
+          <swiper-item
+            v-for="(listItem, listIndex) in [dateList0, dateList1, dateList2]"
+            :key="listIndex"
+          >
+            <view class="calendar-main" :style="{ height: swiperHeight }">
+              <view
+                v-for="(item, index) in listItem"
+                :key="index"
+                class="day"
+                :class="
+                  item.year === nowDay.year &&
+                  item.month === nowDay.month &&
+                  item.day === nowDay.day &&
+                  (item.day !== selectDay.day || oldCurrent !== listIndex)
+                    ? 'opactiy'
+                    : ''
+                "
+              >
+                <view
+                  class="bg"
+                  :class="[
+                    item.year === nowDay.year &&
+                    item.month === nowDay.month &&
+                    item.day === nowDay.day
+                      ? 'now'
+                      : '',
+                    item.year === selectDay.year &&
+                    item.month === selectDay.month
+                      ? item.day === selectDay.day && oldCurrent === listIndex
+                        ? 'select'
+                        : ''
+                      : 'other-month',
+                  ]"
+                  :day="item.day"
+                  :year="item.year"
+                  :month="item.month"
+                  @tap.native.stop="
+                    selectChange(item.year, item.month, item.day)
+                  "
+                >
+                  {{
+                    item.year === nowDay.year &&
+                    item.month === nowDay.month &&
+                    item.day === nowDay.day
+                      ? "今"
+                      : item.day
+                  }}</view
+                >
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+        <view
+          v-if="showShrink"
+          @tap.native.stop="openChange"
+          class="flex list-open"
+        >
+          <view class="icon" :class="open ? 'fold' : 'unfold'"> </view>
+        </view>
+      </view>
+    </my-paging>
   </view>
-</my-paging>
-</view>
-
-  
 </template>
 
 <script>
+import mixin from "@/common/page-extend.js";
+
 export default {
-  name: "calendar",
+  mixins: [mixin],
   components: {},
   props: {},
   data() {
@@ -110,10 +115,7 @@ export default {
   },
   computed: {},
   methods: {
-      
-    onTLoad() {
-    
-    },
+    onTLoad() {},
     swiperChange(e) {
       console.log(e);
       // 日历滑动时触发的方法
@@ -230,9 +232,7 @@ export default {
         if (!setDay) {
           data.open = true;
         }
-        this.setData(data, () => {
-          
-        });
+        this.setData(data, () => {});
       } else {
         const data = {
           selectDay: {
@@ -241,14 +241,11 @@ export default {
             day: setDay ? setDay : day,
           },
         };
-        this.setData(data, () => {
-          
-        });
+        this.setData(data, () => {});
       }
     },
     //展开收起
     openChange() {
-     
       this.open = !this.open;
       // 更新数据
       const selectDate = new Date(
@@ -375,13 +372,13 @@ export default {
       });
     },
     //一天被点击时
-    selectChange(year,month,day) {
+    selectChange(year, month, day) {
       const selectDay = {
         year: year,
         month: month,
         day: day,
       };
-      console.log(this.selectDay,selectDay);
+      console.log(this.selectDay, selectDay);
       if (
         this.open &&
         (this.selectDay.year !== year || this.selectDay.month !== month)
@@ -418,8 +415,6 @@ export default {
           selectDay: selectDay,
         });
       }
-
-    
     },
     updateList(date, offset, index) {
       if (this.open) {
@@ -451,9 +446,7 @@ export default {
   watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {
-    
-  },
+  onLoad() {},
   // 页面周期函数--监听页面初次渲染完成
   onReady() {
     let now = this.defaultTime ? new Date(this.defaultTime) : new Date();

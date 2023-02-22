@@ -7,10 +7,9 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
   <z-paging
     ref="paging"
     v-model="list"
-    fixed
     auto-show-back-to-top
     refresher-threshold="160rpx"
-    @query="queryList"
+    @query="myqueryList"
     :useVirtualList="useVirtualList"
     :useInnerList="useInnerList"
     :cellKeyName="cellKeyName"
@@ -21,6 +20,8 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
     :loading-more-enabled="loadingMoreEnabled"
     :hide-empty-view="!ShowEmptyView"
     :auto-show-system-loading="true"
+    :fixed="fixed"
+    :auto="auto"
   >
     <!-- 这里插入一个view到z-paging中，并且这个view会被z-paging标记为top固定在顶部 -->
 
@@ -74,6 +75,14 @@ export default {
       type: Boolean,
       default: true,
     },
+    fixed: {
+      type: Boolean,
+      default: true,
+    },
+    auto: {
+      type: Boolean,
+      default: true,
+    },
     //是否使用虚拟列表，默认为否
     useVirtualList: {
       type: Boolean,
@@ -114,21 +123,31 @@ export default {
   },
   mounted() {
     ///处理网络错误
-    this.netErrorHandle = function(data) {
-      let {page,err} = data;
+    this.netErrorHandle = function (data) {
+      let { page, err } = data;
       if (!!page.$refs.paging && page.$refs.paging == this) {
-         this.error(err)
+        ///是当前页面才调用error
+        this.error(err);
       }
-    }.bind(this)
+    }.bind(this);
+    uni.$on("net-error", this.netErrorHandle);
 
-    uni.$on('net-error',this.netErrorHandle)
-
+    ///处理网络成功
+    this.netSuccessHandle = function (data) {
+      let { page } = data;
+      if (!!page.$refs.paging && page.$refs.paging == this) {
+         ///是当前页面才调用success
+        this.success();
+      }
+    }.bind(this);
+    uni.$on("net-success", this.netSuccessHandle);
 
     this.LoadingMoreEnabled = this.loadingMoreEnabled;
     this.LoadDataSuccess = this.loadDataSuccess;
   },
   destroyed() {
-    uni.$off('net-error', this.netErrorHandle)
+    uni.$off("net-error", this.netErrorHandle);
+    uni.$off("net-success", this.netSuccessHandle);
   },
   watch: {
     //监听页面v-mode传过来的值，同时传给z-paging
@@ -148,7 +167,7 @@ export default {
     },
     LoadDataSuccess(newVal) {
       console.log(newVal);
-    }
+    },
   },
   methods: {
     ///展示空视图
@@ -160,7 +179,7 @@ export default {
       this.$refs.paging.endRefresh();
     },
     //监听z-paging的@query事件，通过emit传递给页面
-    queryList(pageNo, pageSize) {
+    myqueryList(pageNo, pageSize) {
       this.$emit("query", pageNo, pageSize);
     },
     //接收页面传递过来的reload事件，传给z-paging
@@ -172,13 +191,20 @@ export default {
       if (!data) this.LoadDataSuccess = true;
       this.$refs.paging.complete(data);
     },
-    ///错误展示
+    ///请求错误处理
     error(err) {
       if (this.$refs.paging.pageNo == 1) {
         this.LoadDataSuccess = false;
         this.isShowEmptyView(true);
         this.$refs.paging.complete();
-      } 
+      }
+    },
+    ///请求成功处理
+    success() {
+      if (this.$refs.paging.pageNo == 1 && !this.LoadDataSuccess) {
+        this.LoadDataSuccess = true;
+        this.isShowEmptyView(false);
+      }
     },
     /*
 			//如果是使用页面滚动，则需要添加以下两行，注意页面那边要引入mixins，与使用页面滚动示例写法相同。
@@ -191,9 +217,6 @@ export default {
 				this.$refs.paging.doLoadMore();
 			}
 			*/
-
-    ///不合并组件里面的方法 项目里的自定义
-    nomerge() {},
   },
 };
 </script>

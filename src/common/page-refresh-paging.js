@@ -15,7 +15,7 @@ const mixin = {
                     setTimeout(() => {
                         // this.$refs.paging.endRefresh();
                         this.$refs.paging.endRefresh();
-                      }, 800);
+                      }, 600);
                 }
             }
         },
@@ -28,8 +28,10 @@ let orginMethods = Vue.config.optionMergeStrategies.methods;
 Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
   // 返回合并后的值
   if (!!toVal && !!fromVal) {
-    if (!!toVal.queryList && !!fromVal.queryList && !fromVal.nomerge && !toVal.nomerge) {
+    // if (!!toVal.queryList && !!fromVal.queryList && !fromVal.nomerge && !toVal.nomerge) {
+      if (!!toVal.queryList && !!fromVal.queryList) {
       const orginonqueryList = fromVal.queryList;
+
       fromVal.queryList = function (pageNo,pageSize) {
         ///调用最基础的queryList
         toVal.queryList.call(this,pageNo,pageSize);

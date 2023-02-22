@@ -70,6 +70,7 @@
     "@dcloudio/uni-stat": "^2.0.1-alpha-36920221121001",
     "@dcloudio/uni-ui": "^1.4.26",
     "@vue/shared": "^3.0.0",
+    "@zxlee/z-tabs": "^0.2.5",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
     "vue": "^2.6.11",

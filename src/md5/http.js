@@ -95,6 +95,16 @@ function transformResponse(response, resolve, reject, requestConfig) {
         if (error_code == 0) {
             ///服务端eroor_code字段
             resolve(data);
+            let noHandleView = requestConfig.noHandleView
+
+            if (!noHandleView) {
+                ///处理界面
+                uni.$emit('net-success', {
+                    page: this
+                })
+
+            }
+
         } else {
 
             ///如果noTip有值则不弹出错误提示

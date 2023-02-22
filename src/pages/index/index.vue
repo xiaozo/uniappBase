@@ -1,6 +1,11 @@
 <template>
   <view class="content">
-    <my-paging ref="paging" v-model="list" @query="queryList" :loadingMoreEnabled="true">
+    <my-paging
+      ref="paging"
+      v-model="list"
+      @query="queryList"
+      :loadingMoreEnabled="true"
+    >
       <view slot="top">
         <uni-nav-bar
           :fixed="true"
@@ -11,7 +16,7 @@
           title="自定义导航栏"
         />
       </view>
-      
+
       <view class="tip">
         {{ tip }}
       </view>
@@ -26,8 +31,13 @@
       <button @click="zb">坐标</button>
       <button @click="qq">请求</button>
       <button @click="calendar">日历</button>
-      <view v-for="(item,index) in list" :key="index" style="margin-top:30rpx">
-        {{item.phone_img_url}}
+      <button @click="switch1">switch1</button>
+      <view
+        v-for="(item, index) in list"
+        :key="index"
+        style="margin-top: 30rpx"
+      >
+        {{ item.phone_img_url }}
       </view>
     </my-paging>
   </view>
@@ -47,7 +57,9 @@ function t(target) {
   });
 }
 
+import mixin from '@/common/page-extend.js'
 export default {
+  mixins:[mixin],
   components: {},
   data() {
     return {
@@ -59,25 +71,27 @@ export default {
   methods: {
     queryList(pageNo, pageSize) {
       let params = {
-        book_type:2
+        book_type: 2,
       };
-      params.page_size = pageSize
-      params.page_number = pageNo
+      params.page_size = pageSize;
+      params.page_number = pageNo;
 
       this.$postRequest({
         path: "bookWxapp/getBookList",
         data: params,
-
-      })
-        .then((res) => {
-          console.log(res);
-         this.$refs.paging.complete(res.rows);
-        })
-      
+      }).then((res) => {
+        console.log(res);
+        this.$refs.paging.complete(res.rows);
+      });
     },
 
     onTLoad(options) {
       console.log("index-onTLoad");
+    },
+    switch1() {
+      uni.navigateTo({
+        url: "/pages/switch/index?id=1&name=uniapp",
+      });
     },
     calendar() {
       uni.navigateTo({
