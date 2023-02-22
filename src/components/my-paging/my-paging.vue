@@ -112,6 +112,7 @@ export default {
     },
   },
   mounted() {
+    ///处理网络错误
     this.netErrorHandle = function(data) {
       let {page,err} = data;
       if (!!page.$refs.paging && page.$refs.paging == this) {
@@ -150,6 +151,7 @@ export default {
     isShowEmptyView(showEmptyView) {
       this.ShowEmptyView = showEmptyView;
     },
+    ///结束上拉刷新
     endRefresh() {
       this.$refs.paging.endRefresh();
     },

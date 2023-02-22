@@ -29,6 +29,7 @@ function getRequest(request) {
     return jslRequest.call(this, request)
 }
 
+///noHandleView:不处理空视图   noTip:不弹出错误提示
 function jslRequest(request) {
     let defaultRequest = {
         data: {},
@@ -90,6 +91,14 @@ function transformResponse(response, resolve, reject, requestConfig) {
     var [err, res] = response;
     if (!!err) {
         reject(err);
+
+        ///如果noTip有值则不弹出错误提示
+        if (!requestConfig.noTip) {
+            uni.showToast({
+                title: err,
+                icon: "error",
+            });
+        }
         let noHandleView = requestConfig.noHandleView
         if (!noHandleView) {
             ///处理界面
@@ -99,16 +108,26 @@ function transformResponse(response, resolve, reject, requestConfig) {
             })
         }
     } else {
-        const { data, message, error_code,errorCode } = res.data;
+        const { data, message, error_code, errorCode } = res.data;
 
         if (error_code == 0) {
+            ///服务端eroor_code字段
             resolve(data);
         } else {
-            console.log("netError:", message);
+
             reject({
-                errorCode: error_code||errorCode,
+                errorCode: error_code || errorCode,
                 message
             });
+
+             ///如果noTip有值则不弹出错误提示
+            if (!requestConfig.noTip) {
+                uni.showToast({
+                    title: message,
+                    icon: "error",
+                });
+            }
+
             let noHandleView = requestConfig.noHandleView
             if (!noHandleView) {
                 ///处理界面
@@ -116,6 +135,7 @@ function transformResponse(response, resolve, reject, requestConfig) {
                     page: this,
                     err: message
                 })
+
             }
         }
 

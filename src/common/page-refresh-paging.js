@@ -9,7 +9,6 @@ const mixin = {
     methods: {
         queryList(pageNo, pageSize) {
             if (pageNo == 1) {
-              console.log(pageNo);
                 this.onTLoad(this._options)
                 if (!!this.$refs.paging && !this.$refs.paging.LoadingMoreEnabled) {
                     ///如果是下拉刷新 且不需要加载更多分页，就延迟收起刷新按钮

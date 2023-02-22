@@ -11,7 +11,7 @@
           title="自定义导航栏"
         />
       </view>
-
+      
       <view class="tip">
         {{ tip }}
       </view>
@@ -54,7 +54,6 @@ export default {
       imgShow: "",
       tip: "",
       list: [],
-      b:false
     };
   },
   methods: {
@@ -68,6 +67,7 @@ export default {
       this.$postRequest({
         path: "bookWxapp/getBookList",
         data: params,
+
       })
         .then((res) => {
           console.log(res);
@@ -118,7 +118,6 @@ export default {
               authCode: loginRes.code,
             },
             success: (res) => {
-              // console.log(res.data);
               that.tip = JSON.stringify(res.data);
             },
             fail: (error) => {
