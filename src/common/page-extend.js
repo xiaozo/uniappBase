@@ -32,8 +32,6 @@ const mixin = {
   }
 }
 
-// Vue.mixin(mixin)
-
 let orginMethods = Vue.config.optionMergeStrategies.methods;
 Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
   // 返回合并后的值
@@ -66,8 +64,6 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
 
 }
 
-
-// require('./page-refresh-paging.js');
 
 /*
 保证最后顺序在onload调用onTLoad
