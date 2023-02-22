@@ -19,15 +19,14 @@ let SecretKey = "piw38kulfozrea7ydmjnvbc965q1gt2x"
 
 
 function postRequest(request) {
-    console.log(oldPaths);
     request.method = 'POST'
 
-    return jslRequest(request)
+    return jslRequest.call(this, request)
 }
 
 function getRequest(request) {
     request.method = 'GET'
-    return jslRequest(request)
+    return jslRequest.call(this, request)
 }
 
 function jslRequest(request) {
@@ -37,7 +36,6 @@ function jslRequest(request) {
         path: '',
         method: 'POST',
     }
-
 
     request = Object.assign(defaultRequest, request);
 
@@ -54,7 +52,8 @@ function jslRequest(request) {
                     'content-type': 'application/x-www-form-urlencoded' //自定义请求头信息
                 },
             }).then(data => {
-                transformResponse(data, resolve, reject)
+                console.log(this);
+                transformResponse.call(this, data, resolve, reject, request)
             })
         } else {
             console.log('新接口');
@@ -74,7 +73,7 @@ function jslRequest(request) {
                 data: Object.assign(request.data, request.expand),
                 header: header,
             }).then(data => {
-                transformResponse(data, resolve, reject)
+                transformResponse.call(this, data, resolve, reject, request)
 
             })
         }
@@ -84,15 +83,42 @@ function jslRequest(request) {
     });
 }
 
-function transformResponse(response, resolve, reject) {
+function transformResponse(response, resolve, reject, requestConfig) {
     // data为一个数组
     // 数组第一项为错误信息 即为 fail 回调
     // 第二项为返回数据
     var [err, res] = response;
     if (!!err) {
         reject(err);
+        let noHandleView = requestConfig.noHandleView
+        if (!noHandleView) {
+            ///处理界面
+            uni.$emit('net-error', {
+                page: this,
+                err
+            })
+        }
     } else {
-        resolve(res.data);
+        const { data, message, error_code,errorCode } = res.data;
+
+        if (error_code == 0) {
+            resolve(data);
+        } else {
+            console.log("netError:", message);
+            reject({
+                errorCode: error_code||errorCode,
+                message
+            });
+            let noHandleView = requestConfig.noHandleView
+            if (!noHandleView) {
+                ///处理界面
+                uni.$emit('net-error', {
+                    page: this,
+                    err: message
+                })
+            }
+        }
+
     }
 }
 /**

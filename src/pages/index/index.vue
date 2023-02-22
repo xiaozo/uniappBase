@@ -1,31 +1,35 @@
 <template>
-  <view class="container">
-    <uni-nav-bar
-     :fixed="true"
-      dark
-      shadow
-      background-color="#007AFF"
-      status-bar
-      title="自定义导航栏"
-    />
-    <!-- <postBox></postBox> -->
-    <view class="tip">
-      {{ tip }}
-    </view>
-    <button @click="chooseImage">相册</button>
-    <image
-      @click="preImage"
-      :src="imgShow"
-      mode="aspectFit"
-      class="img"
-    ></image>
-    <button @click="pz">登录</button>
-    <button @click="zb">坐标</button>
-    <button @click="qq">请求</button>
-    <button @click="calendar">日历</button>
-    <view v-for="(item, index) in pageList" :key="index">
-      {{ item.book_name }}
-    </view>
+  <view class="content">
+    <my-paging ref="paging" v-model="list" @query="queryList" :loadingMoreEnabled="true">
+      <view slot="top">
+        <uni-nav-bar
+          :fixed="true"
+          dark
+          shadow
+          background-color="#007AFF"
+          status-bar
+          title="自定义导航栏"
+        />
+      </view>
+
+      <view class="tip">
+        {{ tip }}
+      </view>
+      <button @click="chooseImage">相册</button>
+      <image
+        @click="preImage"
+        :src="imgShow"
+        mode="aspectFit"
+        class="img"
+      ></image>
+      <button @click="pz">登录</button>
+      <button @click="zb">坐标</button>
+      <button @click="qq">请求</button>
+      <button @click="calendar">日历</button>
+      <view v-for="(item,index) in list" :key="index" style="margin-top:30rpx">
+        {{item.phone_img_url}}
+      </view>
+    </my-paging>
   </view>
 </template>
 
@@ -43,36 +47,37 @@ function t(target) {
   });
 }
 
-var { postRequest } = require("md5/http.js");
-
 export default {
   components: {},
   data() {
     return {
       imgShow: "",
       tip: "",
+      list: [],
+      b:false
     };
   },
-  onPullDownRefresh() {},
   methods: {
-    getPageNet(params) {
-      params.book_type = 2;
-      return postRequest({
+    queryList(pageNo, pageSize) {
+      let params = {
+        book_type:2
+      };
+      params.page_size = pageSize
+      params.page_number = pageNo
+
+      this.$postRequest({
         path: "bookWxapp/getBookList",
         data: params,
-      }).then((res) => {
-        return new Promise((resolve, reject) => {
-          if (!res.errorCode) {
-            let { data } = res;
-            resolve(data);
-          }
-        });
-      });
+      })
+        .then((res) => {
+          console.log(res);
+         this.$refs.paging.complete(res.rows);
+        })
+      
     },
 
-    onTLoad() {
+    onTLoad(options) {
       console.log("index-onTLoad");
-      console.log(this.params);
     },
     calendar() {
       uni.navigateTo({
@@ -81,7 +86,7 @@ export default {
     },
     async qq() {
       var that = this;
-      postRequest({
+      this.$postRequest({
         path: "bookWxapp/getBookList",
         data: { book_type: 1, page_number: 1, page_size: 3 },
       })

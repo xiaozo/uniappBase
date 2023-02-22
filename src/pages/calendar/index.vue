@@ -1,4 +1,6 @@
 <template>
+<view class="content">
+  <my-paging  ref="paging" @query="queryList">
   <view class="calendar">
     <!-- 日历头部 -->
     <view class="calendar-week">
@@ -74,6 +76,10 @@
       <view class="icon" :class="open ? 'fold' : 'unfold'"> </view>
     </view>
   </view>
+</my-paging>
+</view>
+
+  
 </template>
 
 <script>
@@ -104,8 +110,23 @@ export default {
   },
   computed: {},
   methods: {
+      
     onTLoad() {
-     console.log(this._options);
+    
+        let params = {
+        book_type:2
+      };
+      params.page_size = 1
+      params.page_number = 10
+
+      this.$postRequest({
+        path: "bookWxapp/getBookList",
+        data: params,
+      })
+        .then((res) => {
+          console.log(res);
+        
+        })
     },
     swiperChange(e) {
       console.log(e);
