@@ -88,6 +88,7 @@ export default {
 
     onTLoad(options) {
       console.log("index-onTLoad");
+      console.log(this==this.$mp);
     },
     switch1() {
       uni.navigateTo({

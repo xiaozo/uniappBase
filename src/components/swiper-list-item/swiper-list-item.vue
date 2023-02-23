@@ -27,7 +27,10 @@
 </template>
 
 <script>
+import mixin from "@/common/component-page-extend.js";
+
 export default {
+  mixins: [],
   data() {
     return {
       //v-model绑定的这个变量不要在分页请求结束中自己赋值！！！
@@ -60,6 +63,7 @@ export default {
             setTimeout(() => {
               this.$refs.paging.reload();
             }, 100);
+            this.firstLoaded = true;
           }
         }
       },
@@ -67,7 +71,11 @@ export default {
     },
   },
   methods: {
+    onComponentPageShow() {
+    },
+    onTLoad(options) {},
     queryList(pageNo, pageSize) {
+      console.log("queryList");
       //组件加载时会自动触发此方法，因此默认页面加载时会自动触发，无需手动调用
       //这里的pageNo和pageSize会自动计算好，直接传给服务器即可
       //模拟请求服务器获取分页数据，请替换成自己的网络请求
@@ -88,6 +96,7 @@ export default {
     itemClick(item) {
       console.log(this);
     },
+    isComponent() {},
   },
 };
 </script>

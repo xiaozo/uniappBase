@@ -188,7 +188,7 @@ export default {
     },
     //接收页面传递过来的complete事件，传给z-paging
     complete(data) {
-      if (!data) this.LoadDataSuccess = true;
+     this.isShowEmptyView(Array.isArray(data));
       this.$refs.paging.complete(data);
     },
     ///请求错误处理

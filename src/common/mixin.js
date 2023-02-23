@@ -1,13 +1,13 @@
 export default {
-    data() {
-        return {
-          ///默认参数
-        
-        }
-    },
-    methods: {
-     
-      setData(data,finish) {
+  data() {
+    return {
+      ///默认参数
+
+    }
+  },
+  methods: {
+
+    setData(data, finish) {
       // 方法放在for循环之外，否则每次循环都会赋值一次
       // 放在外面后内部无法访问key键，作为参数传入
       const deepSet = function (o, arr, k, n) {
@@ -26,9 +26,9 @@ export default {
           this[k] = data[k];
         }
       }
-      
+
       if (!!finish) this.$nextTick(finish())
-      
+
     },
-    }
+  }
 }

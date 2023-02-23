@@ -6,7 +6,7 @@ var { postRequest } = require("md5/http.js");
 
 Vue.mixin(mixin)
 
-require('./common/page-extend.js');
+// require('./common/page-extend.js');
 
 Vue.config.productionTip = false
 Vue.prototype.$postRequest = postRequest

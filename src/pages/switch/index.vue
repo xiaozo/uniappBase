@@ -10,7 +10,7 @@
 			<swiper-item class="swiper-item" v-for="(item, index) in tabList" :key="index">
 				<!-- 这里的swiper-list-item为demo中为演示用定义的组件，列表及分页代码在swiper-list-item组件内 -->
 				<!-- 请注意，swiper-list-item非z-paging内置组件，在自己的项目中必须自己创建，若未创建则会报组件不存在的错误 -->
-			<swiper-list-item :tabIndex="index" :currentIndex="current"></swiper-list-item>
+			<swiper-list-item :tabIndex="index" :currentIndex="current" :pagePro="componentPagePro"></swiper-list-item>
       </swiper-item>
 		</swiper>
 	</z-paging-swiper>
@@ -25,12 +25,15 @@ export default {
   props: {},
   data() {
     return {
-      tabList: ['测试11'],
+      tabList: ['测试11','测试112'],
       current: 0,
     }
   },
   computed: {},
   methods: {
+     onTLoad(options) {
+      console.log(options);
+    },
 			//tabs通知swiper切换
 			tabsChange(index) {
 				this.current = index;
@@ -49,7 +52,7 @@ export default {
 
   // 页面周期函数--监听页面加载
   onLoad() {
-    console.log(this._options);
+    
   },
   // 页面周期函数--监听页面初次渲染完成
   onReady() {},
@@ -58,7 +61,9 @@ export default {
   // 页面周期函数--监听页面隐藏
   onHide() {},
   // 页面周期函数--监听页面卸载
-  onUnload() {},
+  onUnload() {
+    
+  },
   // 页面处理函数--监听用户下拉动作
   // onPullDownRefresh() { uni.stopPullDownRefresh(); },
   // 页面处理函数--监听用户上拉触底

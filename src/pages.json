@@ -48,12 +48,13 @@
 				"navigationBarTitleText": "switch"
 			}
 		}
+	
 	],
 	"globalStyle": {
 		//#ifndef MP-ALIPAY
 		"navigationBarBackgroundColor": "#F8F8F8", //或者设置为#FFFFFF，支付宝小程序才能在导航上显示黑色文字
 		//#endif
-		"navigationBarTextStyle": "white",
+		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"backgroundColor": "#ffffff",
 		"mp-alipay": {
