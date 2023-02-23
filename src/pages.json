@@ -8,6 +8,26 @@
 			"^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "z-paging/components/z-paging$1/z-paging$1.vue"
 		}
 	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#64CD8A",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/tab_1.png",
+				"selectedIconPath": "static/tab_1selected.png",
+				"text": "tab1"
+			},
+			{
+				"pagePath": "pages/calendar/index",
+				"iconPath": "static/tab_2.png",
+				"selectedIconPath": "static/tab_2selected.png",
+				"text": "tab2"
+			}
+		]
+	},
 	"pages": [
 		{
 			"path": "pages/index/index",
