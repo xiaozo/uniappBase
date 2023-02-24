@@ -19,7 +19,7 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
     :virtualScrollFps="virtualScrollFps"
     :loading-more-enabled="loadingMoreEnabled"
     :hide-empty-view="!ShowEmptyView"
-    :auto-show-system-loading="true"
+    :auto-show-system-loading="autoShowSystemLoading"
     :fixed="fixed"
     :auto="auto"
   >
@@ -58,6 +58,10 @@ export default {
     };
   },
   props: {
+    autoShowSystemLoading: {
+      type: Boolean,
+      default: true,
+    },
     //用于接收父组件v-model所绑定的list的值
     value: {
       type: Array,

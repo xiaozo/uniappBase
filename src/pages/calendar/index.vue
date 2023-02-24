@@ -57,7 +57,7 @@
                   :day="item.day"
                   :year="item.year"
                   :month="item.month"
-                  @tap.native.stop="
+                  @tap.stop="
                     selectChange(item.year, item.month, item.day)
                   "
                 >
@@ -75,7 +75,7 @@
         </swiper>
         <view
           v-if="showShrink"
-          @tap.native.stop="openChange"
+          @tap.stop="openChange"
           class="flex list-open"
         >
           <view class="icon" :class="open ? 'fold' : 'unfold'"> </view>

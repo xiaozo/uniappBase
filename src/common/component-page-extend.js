@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 /**
- * 在methods的方法重写继承需要写到Vue.config.optionMergeStrategies.methods
+ * 组件的页面
  */
 const mixin = {
     props: {

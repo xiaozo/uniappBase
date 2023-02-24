@@ -32,6 +32,7 @@
       <button @click="qq">请求</button>
       <button @click="calendar">日历</button>
       <button @click="switch1">switch1</button>
+      <button @click="coures">课程</button>
       <view
         v-for="(item, index) in list"
         :key="index"
@@ -88,17 +89,24 @@ export default {
 
     onTLoad(options) {
       console.log("index-onTLoad");
-      console.log(this==this.$mp);
+     
+    },
+    coures() {
+      uni.navigateTo({
+        url: "/pages/course/index?id=1&name=uniapp",
+      });
     },
     switch1() {
       uni.navigateTo({
         url: "/pages/switch/index?id=1&name=uniapp",
       });
+       
     },
     calendar() {
-      uni.navigateTo({
-        url: "/pages/calendar/index?id=1&name=uniapp",
-      });
+      // uni.navigateTo({
+      //   url: "/pages/calendar/index?id=1&name=uniapp",
+      // });
+      console.log(this);
     },
     async qq() {
       var that = this;

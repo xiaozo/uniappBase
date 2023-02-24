@@ -30,7 +30,7 @@
 import mixin from "@/common/component-page-extend.js";
 
 export default {
-  mixins: [],
+  mixins: [mixin],
   data() {
     return {
       //v-model绑定的这个变量不要在分页请求结束中自己赋值！！！
@@ -72,6 +72,10 @@ export default {
   },
   methods: {
     onComponentPageShow() {
+      console.log("onComponentPageShow1");
+    },
+     onComponentPageHide() {
+      console.log("onComponentPageHide");
     },
     onTLoad(options) {},
     queryList(pageNo, pageSize) {
