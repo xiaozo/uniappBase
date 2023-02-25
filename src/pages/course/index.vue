@@ -9,8 +9,8 @@
       title="课程"
       :border="false"
     />
-    <my-paging ref="paging" :autoShowSystemLoading="false">
-      <view class="course-warp">
+    <my-paging ref="paging" @query="queryList" :autoShowSystemLoading="false">
+      <view class="course-warp" :style="{ paddingTop: bar_height }">
         <view class="course-name-item">
           <view>
             <view class="course-name"> 少儿编程课-Scratch3 </view>
@@ -45,6 +45,9 @@
             <view class="course-label"> 下课时间 </view>
           </view>
         </view>
+         <view class="course-card-item " style="margin:24rpx 30rpx 0;">
+          <uni-steps :options="[{title:'Lesson1',desc:'本次'},{title:'u5',desc:'下次'},{title:'课程大纲'}]" direction="column" :active="0"></uni-steps>
+         </view>
       </view>
     </my-paging>
   </view>
@@ -58,25 +61,9 @@ export default {
   data() {
     return {
       date: "",
-      items: [
-        {
-          title: "Lesson1",
-          description: "描述信息",
-          type: 1,
-        },
-        {
-          title: "U5-U6考试",
-          description: "描述信息",
-          type: 2,
-        },
-        {
-          title: "步骤三",
-          description: "描述信息",
-          type: 3,
-        },
-      ],
       courseStatus: "startBtn",
       status: 0,
+      bar_height:0
     };
   },
   computed: {},
@@ -84,7 +71,9 @@ export default {
   watch: {},
 
   // 页面周期函数--监听页面加载
-  onLoad() {},
+  onLoad() {
+    this.bar_height = uni.getStorageSync("bar_height")+"px"
+  },
   // 页面周期函数--监听页面初次渲染完成
   onReady() {},
   // 页面周期函数--监听页面显示(not-nvue)

@@ -9,6 +9,7 @@
       @query="queryList"
       :fixed="false"
       :auto="false"
+      :autoShowSystemLoading="false"
       :loadingMoreEnabled="true"
     >
       <!-- 如果希望其他view跟着页面滚动，可以放在z-paging标签内 -->
@@ -72,7 +73,7 @@ export default {
   },
   methods: {
     onComponentPageShow() {
-      console.log("onComponentPageShow1");
+      console.log("onComponentPageShow");
     },
      onComponentPageHide() {
       console.log("onComponentPageHide");
