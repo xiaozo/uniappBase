@@ -6,11 +6,18 @@
 			<z-tabs ref="tabs" :list="tabList" :current="current" @change="tabsChange" />
 		</template>
 		<!-- swiper必须设置height:100%，因为swiper有默认的高度，只有设置高度100%才可以铺满页面  -->
-		<swiper class="swiper" :current="current" @transition="swiperTransition" @animationfinish="swiperAnimationfinish">
+		<swiper class="swiper" :current="current" @transition="swiperTransition" @animationfinish="swiperAnimationfinish"
+    		 <!-- #ifdef MP-ALIPAY -->
+		 	:disable-touch='true'
+		 <!-- #endif -->
+    >
 			<swiper-item class="swiper-item" v-for="(item, index) in tabList" :key="index">
 				<!-- 这里的swiper-list-item为demo中为演示用定义的组件，列表及分页代码在swiper-list-item组件内 -->
 				<!-- 请注意，swiper-list-item非z-paging内置组件，在自己的项目中必须自己创建，若未创建则会报组件不存在的错误 -->
-			<swiper-list-item :tabIndex="index" :currentIndex="current" :pagePro="componentPagePro"></swiper-list-item>
+        <myswiper-item-container @change="tabsChange" :tabIndex="index" :currentIndex="current" :indexs="tabList.length - 1">
+					<swiper-list-item :tabIndex="index" :currentIndex="current" :pagePro="componentPagePro"></swiper-list-item>
+				</myswiper-item-container>
+			
       </swiper-item>
 		</swiper>
 	</z-paging-swiper>
