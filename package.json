@@ -73,6 +73,8 @@
     "@zxlee/z-tabs": "^0.2.5",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "uni-read-pages": "^1.0.5",
+    "uni-simple-router": "^2.0.8-beta.4",
     "vue": "^2.6.11",
     "vuex": "^3.2.0",
     "z-paging": "^2.5.3"

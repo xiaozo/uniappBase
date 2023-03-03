@@ -38,12 +38,14 @@
 			}
 		},
 		{
+			
 			"path": "pages/calendar/index",
 			"style": {
 				"navigationBarTitleText": "calendar"
 			}
 		},
 		{
+			"name":"switch",
 			"path": "pages/switch/index",
 			"style": {
 				"navigationBarTitleText": "switch"

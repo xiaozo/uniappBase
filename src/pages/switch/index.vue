@@ -39,6 +39,7 @@ export default {
   computed: {},
   methods: {
      onTLoad(options) {
+      console.log("onTLoad");
     },
 			//tabs通知swiper切换
 			tabsChange(index) {

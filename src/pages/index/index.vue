@@ -33,6 +33,7 @@
       <button @click="calendar">日历</button>
       <button @click="switch1">switch1</button>
       <button @click="coures">课程</button>
+      <button @click="router">路由</button>
       <view
         v-for="(item, index) in list"
         :key="index"
@@ -58,10 +59,10 @@ function t(target) {
   });
 }
 
-import mixin from '@/common/page-extend.js'
+import mixin from "@/common/page-extend.js";
 
 export default {
-  mixins:[mixin],
+  mixins: [mixin],
   components: {},
   data() {
     return {
@@ -89,7 +90,15 @@ export default {
 
     onTLoad(options) {
       console.log("index-onTLoad");
-     
+    },
+    router() {
+      this.$Router.push({
+        name: "switch",
+        params: {
+          name: "hhyang",
+          id: 12,
+        },
+      });
     },
     coures() {
       uni.navigateTo({
@@ -100,7 +109,6 @@ export default {
       uni.navigateTo({
         url: "/pages/switch/index?id=1&name=uniapp",
       });
-       
     },
     calendar() {
       // uni.navigateTo({
