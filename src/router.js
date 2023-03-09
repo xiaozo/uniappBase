@@ -3,7 +3,12 @@ import {RouterMount,createRouter} from 'uni-simple-router';
 
 const router = createRouter({
 	platform: process.env.VUE_APP_PLATFORM,  
-	routes: [...ROUTES]
+	routes: [...ROUTES],
+	// beforeProxyHooks:{
+	// 	onShow(){
+	// 		console.log("Router_onShow");
+	// 	}
+	// }
 });
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {
