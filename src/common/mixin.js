@@ -1,3 +1,4 @@
+var util = require("@/utils/util.js");
 export default {
   data() {
     return {
@@ -30,5 +31,9 @@ export default {
       if (!!finish) this.$nextTick(finish())
 
     },
+    ossResource(path) {
+      return util.ossResource(path)
+    }
+
   }
 }

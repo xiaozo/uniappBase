@@ -20,7 +20,9 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
     :loading-more-enabled="loadingMoreEnabled"
     :hide-empty-view="!ShowEmptyView"
     :auto-show-system-loading="autoShowSystemLoading"
+    :auto-hide-loading-after-first-loaded="autoHideLoadingAfterFirstLoaded"
     :fixed="fixed"
+    :show-empty-view-reload="showEmptyViewReload"
     :auto="auto"
   >
     <!-- 这里插入一个view到z-paging中，并且这个view会被z-paging标记为top固定在顶部 -->
@@ -34,6 +36,15 @@ https://z-paging.zxlee.cn/start/migration-to-vue3.html -->
     <template #bottom>
       <!-- 这里接收页面传进来的slot，这样相当于将页面传进来的slot传给z-paging的slot="bottom"了 -->
       <slot name="bottom" />
+    </template>
+
+    <template #loading>
+      <!-- 这里接收页面传进来的slot，这样相当于将页面传进来的slot传给z-paging的slot="loading"了 -->
+      <!-- <slot name="loading" /> -->
+      <view class="loading">
+        <image class="img" src="/static/loading.png" />
+        <view class="text">海风吹啊吹</view>
+      </view>
     </template>
 
     <!-- 这个是插入虚拟列表/内置列表的cell -->
@@ -58,9 +69,13 @@ export default {
     };
   },
   props: {
-    autoShowSystemLoading: {
+    autoHideLoadingAfterFirstLoaded: {
       type: Boolean,
       default: true,
+    },
+    autoShowSystemLoading: {
+      type: Boolean,
+      default: false,
     },
     //用于接收父组件v-model所绑定的list的值
     value: {
@@ -79,6 +94,11 @@ export default {
       type: Boolean,
       default: true,
     },
+    //是否显示空数据图重新加载按钮(无数据时)/
+    showEmptyViewReload: {
+      type: Boolean,
+      default: true,
+    },
     fixed: {
       type: Boolean,
       default: true,
@@ -86,6 +106,11 @@ export default {
     auto: {
       type: Boolean,
       default: true,
+    },
+    //是否隐藏空页面
+    hideEmptyView: {
+      type: Boolean,
+      default: false,
     },
     //是否使用虚拟列表，默认为否
     useVirtualList: {
@@ -129,7 +154,8 @@ export default {
     ///处理网络错误
     this.netErrorHandle = function (data) {
       let { page, err } = data;
-      if (!!page.$refs.paging && page.$refs.paging == this) {
+
+      if (!!page.$refs?.paging && page.$refs?.paging == this) {
         ///是当前页面才调用error
         this.error(err);
       }
@@ -139,8 +165,8 @@ export default {
     ///处理网络成功
     this.netSuccessHandle = function (data) {
       let { page } = data;
-      if (!!page.$refs.paging && page.$refs.paging == this) {
-         ///是当前页面才调用success
+      if (!!page.$refs?.paging && page.$refs?.paging == this) {
+        ///是当前页面才调用success
         this.success();
       }
     }.bind(this);
@@ -169,14 +195,12 @@ export default {
     loadDataSuccess(newVal) {
       this.LoadDataSuccess = newVal;
     },
-    LoadDataSuccess(newVal) {
-      console.log(newVal);
-    },
+    LoadDataSuccess(newVal) {},
   },
   methods: {
     ///展示空视图
     isShowEmptyView(showEmptyView) {
-      this.ShowEmptyView = showEmptyView;
+      this.ShowEmptyView = !this.hideEmptyView ? showEmptyView : false;
     },
     ///结束上拉刷新
     endRefresh() {
@@ -188,24 +212,25 @@ export default {
     },
     //接收页面传递过来的reload事件，传给z-paging
     reload(data) {
+      // this.setAutoShowSystemLoading(false)
       this.$refs.paging.reload(data);
     },
     //接收页面传递过来的complete事件，传给z-paging
     complete(data) {
-     this.isShowEmptyView(Array.isArray(data));
+      this.isShowEmptyView(Array.isArray(data));
       this.$refs.paging.complete(data);
     },
     ///请求错误处理
     error(err) {
-      if (this.$refs.paging.pageNo == 1) {
-        this.LoadDataSuccess = false;
+      if (this.$refs?.paging.pageNo == 1) {
+        this.LoadDataSuccess = this.hideEmptyView;
         this.isShowEmptyView(true);
         this.$refs.paging.complete();
       }
     },
     ///请求成功处理
     success() {
-      if (this.$refs.paging.pageNo == 1 && !this.LoadDataSuccess) {
+      if (this.$refs?.paging.pageNo == 1 && !this.LoadDataSuccess) {
         this.LoadDataSuccess = true;
         this.isShowEmptyView(false);
       }
@@ -225,5 +250,39 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1080deg);
+  }
+}
+.loading {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  .img {
+    animation-name: rotate;
+    animation-duration: 2s; /* 动画开始快，结束慢 */
+    animation-timing-function: ease-in-out; /* 缓动函数 */
+    animation-iteration-count: infinite; /* 无限循环 */
+    background-color: transparent;
+
+    height: 90rpx;
+    width: 90rpx;
+  }
+  .text {
+    margin-top: 20rpx;
+    font-size: 24rpx;
+    color: #999;
+    text-align: center;
+  }
+}
 </style>

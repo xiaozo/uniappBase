@@ -10,6 +10,7 @@ const mixin = {
       _options: {},
       ///子组件页面配置
       componentPagePro: {
+        isLoad: false,
         ///主页面的解析的参数
         options: {},
         ///页面是否显示
@@ -26,6 +27,7 @@ const mixin = {
     this.$nextTick(
       () => {
         this.componentPagePro.isShow = true
+        this.componentPagePro.isLoad = true
       }
     )
 
@@ -39,19 +41,23 @@ const mixin = {
   },
   methods: {
     onTLoad(options) {
+
+
     },
     queryList(pageNo, pageSize) {
       if (pageNo == 1) {
         this.onTLoad(this._options)
-        if (!!this.$refs.paging && !this.$refs.paging.LoadingMoreEnabled) {
-          ///如果是下拉刷新 且不需要加载更多分页，就延迟收起刷新按钮
-          setTimeout(() => {
-            // this.$refs.paging.endRefresh();
-            this.$refs.paging.endRefresh();
-          }, 600);
-        }
       }
     },
+    refresh(firstLoad=true) {
+      if (!firstLoad && !this.componentPagePro.isLoad) return
+      if (!!this.$refs.paging) {
+        this.$refs.paging.reload()
+      } else {
+        this.onTLoad(this._options)
+      }
+    }
+    
   }
 }
 
@@ -118,5 +124,3 @@ Vue.config.optionMergeStrategies.onLoad = function (toVal, fromVal) {
 }
 
 export default mixin
-
-

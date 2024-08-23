@@ -49,14 +49,16 @@ const mixin = {
         queryList(pageNo, pageSize) {
             if (pageNo == 1) {
                 this.onTLoad(this._options)
-                if (!!this.$refs.paging && !this.$refs.paging.LoadingMoreEnabled) {
-                    ///如果是下拉刷新 且不需要加载更多分页，就延迟收起刷新按钮
-                    setTimeout(() => {
-                        this.$refs.paging.endRefresh();
-                    }, 600);
-                }
             }
         },
+        refresh(firstLoad=true) {
+            if (!firstLoad && !this.componentPagePro.isLoad) return
+            if (!!this.$refs.paging) {
+              this.$refs.paging.reload()
+            } else {
+              this.onTLoad(this._options)
+            }
+          }
     }
 }
 
