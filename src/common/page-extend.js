@@ -14,7 +14,9 @@ const mixin = {
         ///主页面的解析的参数
         options: {},
         ///页面是否显示
-        isShow: false
+        isShow: false,
+        ///是否onshow时候刷新
+        isShowRefresh: false
       }
     }
   },
@@ -28,6 +30,11 @@ const mixin = {
       () => {
         this.componentPagePro.isShow = true
         this.componentPagePro.isLoad = true
+
+        if (!!this.componentPagePro.isShowRefresh) {
+          this.refresh()
+          this.componentPagePro.isShowRefresh = false
+        }
       }
     )
 
@@ -49,15 +56,25 @@ const mixin = {
         this.onTLoad(this._options)
       }
     },
-    refresh(firstLoad=true) {
+    refresh(firstLoad = true) {
       if (!firstLoad && !this.componentPagePro.isLoad) return
       if (!!this.$refs.paging) {
         this.$refs.paging.reload()
       } else {
         this.onTLoad(this._options)
       }
+    },
+    showRefresh() {
+      this.componentPagePro.isShowRefresh = true
+    },
+
+    navigateBack() {
+      uni.navigateBack({
+        delta: 1
+      });
+      return true
     }
-    
+
   }
 }
 
@@ -85,6 +102,21 @@ Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
         toVal.queryList.call(this, pageNo, pageSize);
         ///调用子的queryList
         orginonqueryList.call(this, pageNo, pageSize)
+      }
+    }
+
+    if (!!toVal.navigateBack && !!fromVal.navigateBack) {
+      const orginonnavigateBack = fromVal.navigateBack;
+
+      fromVal.navigateBack = function () {
+        ///调用子的navigateBack
+        const back = orginonnavigateBack.call(this)
+        if (back) {
+          ///调用最基础的navigateBack
+          toVal.navigateBack.call(this);
+        }
+
+
       }
     }
   }
